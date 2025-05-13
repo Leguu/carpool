@@ -23,7 +23,7 @@ func runMessageSchedule() {
 		time.Sleep(time.Until(nextEight))
 
 		if !currentState.Going && !currentState.Returning {
-			return
+			continue
 		}
 
 		sendMessageToLegu(currentState.getMessage())
@@ -36,7 +36,7 @@ func runExpenseSchedule() {
 		time.Sleep(time.Until(nextNine))
 
 		if !currentState.Going && !currentState.Returning {
-			return
+			continue
 		}
 
 		slog.Info("Going or returning detected, adding expense")
