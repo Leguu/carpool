@@ -18,7 +18,7 @@ func getPayload(amount int) map[string]any {
 			"json": map[string]any{
 				"groupId": "042f2ssmbNK_8-TqwxB5E",
 				"expenseFormValues": map[string]any{
-					"expenseDate": time.Now().AddDate(0, 0, 1).Format(time.RFC3339),
+					"expenseDate": time.Now().Format(time.RFC3339),
 					"title":       "Carpool",
 					"category":    27,
 					"amount":      amount,
