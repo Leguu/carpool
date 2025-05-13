@@ -29,7 +29,7 @@ func initServer() *http.ServeMux {
 		currentState.Going = !currentState.Going
 
 		if time.Now().Hour() >= 20 || time.Now().Hour() < 8 {
-			sendMessageToLegu(discord, fmt.Sprintf("Gary has changed his mind, he will %sbe going with you %s.", not(currentState.Going), day()))
+			sendMessageToLegu(fmt.Sprintf("Gary has changed his mind, he will %sbe going with you %s.", not(currentState.Going), day()))
 		}
 
 		http.Redirect(w, r, r.Referer(), http.StatusFound)
@@ -39,7 +39,7 @@ func initServer() *http.ServeMux {
 		currentState.Returning = !currentState.Returning
 
 		if time.Now().Hour() >= 20 || time.Now().Hour() < 8 {
-			sendMessageToLegu(discord, fmt.Sprintf("Gary has changed his mind, he will %sbe going with you %s.", not(currentState.Returning), day()))
+			sendMessageToLegu(fmt.Sprintf("Gary has changed his mind, he will %sbe going with you %s.", not(currentState.Returning), day()))
 		}
 
 		http.Redirect(w, r, r.Referer(), http.StatusFound)

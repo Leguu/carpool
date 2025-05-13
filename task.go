@@ -30,7 +30,7 @@ func runSchedule() {
 
 		addExpense(currentState.getAmount())
 
-		sendMessageToLegu(discord, currentState.getMessage())
+		sendMessageToLegu(currentState.getMessage())
 
 		currentState = State{}
 	}

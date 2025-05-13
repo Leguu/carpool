@@ -26,7 +26,7 @@ func init() {
 	discord.Identify.Intents = discordgo.IntentsGuildMessages
 }
 
-func sendMessageToLegu(discord *discordgo.Session, message string) {
+func sendMessageToLegu(message string) {
 	channel, err := discord.UserChannelCreate(legu)
 	if err != nil {
 		slog.Error(fmt.Sprintf("could not create discord channel: %s", err))
