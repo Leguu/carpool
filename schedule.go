@@ -19,8 +19,8 @@ func nextHour(hour int, skipToday bool) time.Time {
 
 func runMessageSchedule() {
 	for {
-		nextEight := nextHour(20, true)
-		time.Sleep(time.Until(nextEight))
+		nextNine := nextHour(21, true)
+		time.Sleep(time.Until(nextNine))
 
 		if !currentState.Going && !currentState.Returning {
 			continue
@@ -32,8 +32,8 @@ func runMessageSchedule() {
 
 func runExpenseSchedule() {
 	for {
-		nextNine := nextHour(8, true)
-		time.Sleep(time.Until(nextNine))
+		nextEight := nextHour(8, true)
+		time.Sleep(time.Until(nextEight))
 
 		if !currentState.Going && !currentState.Returning {
 			continue
