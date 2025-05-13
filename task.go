@@ -17,7 +17,20 @@ func nextHour(hour int, skipToday bool) time.Time {
 	return result
 }
 
-func runSchedule() {
+func runMessageSchedule() {
+	for {
+		nextEight := nextHour(20, true)
+		time.Sleep(time.Until(nextEight))
+
+		if !currentState.Going && !currentState.Returning {
+			return
+		}
+
+		sendMessageToLegu(currentState.getMessage())
+	}
+}
+
+func runExpenseSchedule() {
 	for {
 		nextNine := nextHour(8, true)
 		time.Sleep(time.Until(nextNine))
@@ -29,8 +42,6 @@ func runSchedule() {
 		slog.Info("Going or returning detected, adding expense")
 
 		addExpense(currentState.getAmount())
-
-		sendMessageToLegu(currentState.getMessage())
 
 		currentState = State{}
 	}

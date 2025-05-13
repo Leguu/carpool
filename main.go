@@ -9,7 +9,8 @@ import (
 func main() {
 	server := initServer()
 
-	go runSchedule()
+	go runExpenseSchedule()
+	go runMessageSchedule()
 
 	sendMessageToLegu("Carpool server started")
 	defer sendMessageToLegu("Be warned, carpool server is shutting down")
