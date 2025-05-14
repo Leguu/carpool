@@ -6,8 +6,10 @@ import (
 )
 
 type State struct {
-	Going     bool
-	Returning bool
+	Going        bool
+	Returning    bool
+	DisableGoing bool
+	Day          string
 }
 
 var currentState = State{}

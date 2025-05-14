@@ -6,14 +6,15 @@ import (
 	"net/http"
 )
 
+var endOfDay = 21
+var startOfDay = 8
+var endOfShift = 16
+
 func main() {
 	server := initServer()
 
 	go runExpenseSchedule()
 	go runMessageSchedule()
-
-	sendMessageToLegu("Carpool server started")
-	defer sendMessageToLegu("Be warned, carpool server is shutting down")
 
 	slog.Info("Serving on http://localhost:12847")
 	http.ListenAndServe("localhost:12847", server)

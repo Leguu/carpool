@@ -18,7 +18,7 @@ func initServer() *http.ServeMux {
 		}
 	}
 	day := func() string {
-		if time.Now().Hour() <= 8 {
+		if time.Now().Hour() <= endOfShift {
 			return "today"
 		} else {
 			return "tomorrow"
@@ -26,9 +26,15 @@ func initServer() *http.ServeMux {
 	}
 
 	mux.HandleFunc("/api/state/going", func(w http.ResponseWriter, r *http.Request) {
+		if time.Now().Hour() >= startOfDay && time.Now().Hour() < endOfShift {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("You can't change the going state right now"))
+			return
+		}
+
 		currentState.Going = !currentState.Going
 
-		if time.Now().Hour() >= 20 || time.Now().Hour() < 8 {
+		if time.Now().Hour() >= endOfDay || time.Now().Hour() < startOfDay {
 			sendMessageToLegu(fmt.Sprintf("Gary has changed his mind, he will %sbe going with you %s.", not(currentState.Going), day()))
 		}
 
@@ -38,15 +44,28 @@ func initServer() *http.ServeMux {
 	mux.HandleFunc("/api/state/returning", func(w http.ResponseWriter, r *http.Request) {
 		currentState.Returning = !currentState.Returning
 
-		if time.Now().Hour() >= 20 || time.Now().Hour() < 8 {
-			sendMessageToLegu(fmt.Sprintf("Gary has changed his mind, he will %sbe going with you %s.", not(currentState.Returning), day()))
+		if time.Now().Hour() >= endOfDay || time.Now().Hour() < startOfDay {
+			sendMessageToLegu(fmt.Sprintf("Gary has changed his mind, he will %sbe returning with you %s.", not(currentState.Returning), day()))
 		}
 
 		http.Redirect(w, r, r.Referer(), http.StatusFound)
 	})
 
 	index := func(w http.ResponseWriter, r *http.Request) {
-		result := views.IndexTemplate.MustExec(currentState)
+		ctx := map[string]any{
+			"day":        day(),
+			"going":      currentState.Going,
+			"returning":  currentState.Returning,
+			"endOfShift": endOfShift,
+			"endOfDay":   endOfDay,
+			"startOfDay": startOfDay,
+		}
+		if time.Now().Hour() >= startOfDay && time.Now().Hour() < endOfShift {
+			ctx["disableGoing"] = true
+		} else {
+			ctx["disableGoing"] = false
+		}
+		result := views.IndexTemplate.MustExec(ctx)
 		w.Write([]byte(result))
 	}
 	mux.HandleFunc("/", index)

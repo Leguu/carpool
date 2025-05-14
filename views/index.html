@@ -14,32 +14,34 @@
   <h4>Do you want to carpool with Asil tomorrow?</h4>
 
   <ul>
-    <li>Before 9pm, any changes are soft.</li>
-    <li>At 9pm every day, it will notify me if you're coming or going the next day.</li>
-    <li>After 9pm and before 8am, it'll notify me if you make a change (don't spam me with messages).</li>
-    <li>At 8am every day, if you are going or returning, it will create an expense and reset the state.</li>
+    <li>Before {{endOfDay}}:00, any changes are soft.</li>
+    <li>At {{endOfDay}}:00 every day, it will notify me if you're coming or going the next day.</li>
+    <li>After {{endOfDay}}:00 and before {{endOfShift}}:00 the next day, it'll notify me if you make a change
+      (don't spam me with messages).</li>
+    <li>At {{endOfShift}}:00 every day, if you are going or returning, it will create an expense and reset the state.
+    </li>
+    <li>Between {{startOfDay}}:00 and {{endOfShift}}:00 you will not be able to change the going state.</li>
     <li>It will not do anything if you have not clicked the buttons.</li>
   </ul>
 
-  <p>Ideally, don't change the state after 9pm, but it's ok if you do.</p>
-
   <div class="hstack gap-3">
     <form action="/api/state/going" method="post">
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" {{#if disableGoing}}disabled{{/if}}
+        class="btn {{#if going}}btn-success{{else}}btn-warning{{/if}}">
         {{#if going}}
-        ✅ Going tomorrow
+        Going {{day}}
         {{else}}
-        ❎ Not going tomorrow
+        Not going {{day}}
         {{/if}}
       </button>
     </form>
 
     <form action="/api/state/returning" method="post">
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" class="btn {{#if returning}}btn-success{{else}}btn-warning{{/if}}">
         {{#if returning}}
-        ✅ Returning tomorrow
+        Returning {{day}}
         {{else}}
-        ❎ Not returning tomorrow
+        Not returning {{day}}
         {{/if}}
       </button>
     </form>
