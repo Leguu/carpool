@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -10,7 +12,23 @@ type State struct {
 	Returning bool
 }
 
+func (s State) Save() {
+	res, _ := json.Marshal(s)
+	os.WriteFile("state.json", res, 0644)
+}
+
+func (s *State) Load() {
+	res, err := os.ReadFile("state.json")
+	if err == nil {
+		json.Unmarshal(res, &s)
+	}
+}
+
 var currentState = State{}
+
+func init() {
+	currentState.Load()
+}
 
 func (currentState State) getAmount() int {
 	amount := 0

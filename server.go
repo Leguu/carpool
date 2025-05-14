@@ -37,6 +37,7 @@ func initServer() *http.ServeMux {
 		}
 
 		currentState.Going = !currentState.Going
+		currentState.Save()
 
 		if endOfDay <= hour() || hour() < startOfShift {
 			sendMessageToLegu(fmt.Sprintf("Gary has changed his mind, he will %sbe going with you %s.", not(currentState.Going), day()))
@@ -47,6 +48,7 @@ func initServer() *http.ServeMux {
 
 	mux.HandleFunc("/api/state/returning", func(w http.ResponseWriter, r *http.Request) {
 		currentState.Returning = !currentState.Returning
+		currentState.Save()
 
 		if endOfDay <= hour() || hour() < startOfShift {
 			sendMessageToLegu(fmt.Sprintf("Gary has changed his mind, he will %sbe returning with you %s.", not(currentState.Returning), day()))

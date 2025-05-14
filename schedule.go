@@ -42,5 +42,6 @@ func runExpenseSchedule() {
 		addExpense(currentState.getAmount())
 
 		currentState = State{}
+		currentState.Save()
 	}
 }
