@@ -9,4 +9,18 @@ import (
 //go:embed index.html
 var htmlIndex string
 
-var IndexTemplate = raymond.MustParse(htmlIndex)
+var indexTemplate = raymond.MustParse(htmlIndex)
+
+type IndexPage struct {
+	Day          string
+	Going        bool
+	Returning    bool
+	EndOfShift   int
+	EndOfDay     int
+	StartOfDay   int
+	DisableGoing bool
+}
+
+func RenderIndex(page IndexPage) string {
+	return indexTemplate.MustExec(page)
+}

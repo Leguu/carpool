@@ -18,7 +18,7 @@ func initServer() *http.ServeMux {
 		}
 	}
 	day := func() string {
-		if time.Now().Hour() <= endOfShift {
+		if time.Now().Hour() < endOfShift {
 			return "today"
 		} else {
 			return "tomorrow"
@@ -58,20 +58,20 @@ func initServer() *http.ServeMux {
 	})
 
 	index := func(w http.ResponseWriter, r *http.Request) {
-		ctx := map[string]any{
-			"day":        day(),
-			"going":      currentState.Going,
-			"returning":  currentState.Returning,
-			"endOfShift": endOfShift,
-			"endOfDay":   endOfDay,
-			"startOfDay": startOfShift,
+		page := views.IndexPage{
+			Day:        day(),
+			Going:      currentState.Going,
+			Returning:  currentState.Returning,
+			EndOfShift: endOfShift,
+			EndOfDay:   endOfDay,
+			StartOfDay: startOfShift,
 		}
 		if startOfShift <= hour() && hour() < endOfShift {
-			ctx["disableGoing"] = true
+			page.DisableGoing = true
 		} else {
-			ctx["disableGoing"] = false
+			page.DisableGoing = false
 		}
-		result := views.IndexTemplate.MustExec(ctx)
+		result := views.RenderIndex(page)
 		w.Write([]byte(result))
 	}
 	mux.HandleFunc("/", index)
