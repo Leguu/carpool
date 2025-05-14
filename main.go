@@ -7,7 +7,7 @@ import (
 )
 
 var endOfDay = 21
-var startOfDay = 8
+var startOfShift = 8
 var endOfShift = 16
 
 func main() {

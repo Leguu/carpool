@@ -25,8 +25,12 @@ func initServer() *http.ServeMux {
 		}
 	}
 
+	hour := func() int {
+		return time.Now().Hour()
+	}
+
 	mux.HandleFunc("/api/state/going", func(w http.ResponseWriter, r *http.Request) {
-		if time.Now().Hour() >= startOfDay && time.Now().Hour() < endOfShift {
+		if startOfShift <= hour() && hour() < endOfShift {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("You can't change the going state right now"))
 			return
@@ -34,7 +38,7 @@ func initServer() *http.ServeMux {
 
 		currentState.Going = !currentState.Going
 
-		if time.Now().Hour() >= endOfDay || time.Now().Hour() < startOfDay {
+		if endOfDay <= hour() || hour() < startOfShift {
 			sendMessageToLegu(fmt.Sprintf("Gary has changed his mind, he will %sbe going with you %s.", not(currentState.Going), day()))
 		}
 
@@ -44,7 +48,7 @@ func initServer() *http.ServeMux {
 	mux.HandleFunc("/api/state/returning", func(w http.ResponseWriter, r *http.Request) {
 		currentState.Returning = !currentState.Returning
 
-		if time.Now().Hour() >= endOfDay || time.Now().Hour() < startOfDay {
+		if endOfDay <= hour() || hour() < startOfShift {
 			sendMessageToLegu(fmt.Sprintf("Gary has changed his mind, he will %sbe returning with you %s.", not(currentState.Returning), day()))
 		}
 
@@ -58,9 +62,9 @@ func initServer() *http.ServeMux {
 			"returning":  currentState.Returning,
 			"endOfShift": endOfShift,
 			"endOfDay":   endOfDay,
-			"startOfDay": startOfDay,
+			"startOfDay": startOfShift,
 		}
-		if time.Now().Hour() >= startOfDay && time.Now().Hour() < endOfShift {
+		if startOfShift <= hour() && hour() < endOfShift {
 			ctx["disableGoing"] = true
 		} else {
 			ctx["disableGoing"] = false
